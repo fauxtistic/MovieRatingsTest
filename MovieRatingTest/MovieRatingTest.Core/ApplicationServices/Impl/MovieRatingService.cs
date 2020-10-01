@@ -56,7 +56,8 @@ namespace MovieRatingTest.Core.ApplicationServices.Impl
 
         public int GetNumberOfRates(int movie, int rate)
         {
-            throw new NotImplementedException();
+            return _repo.GetAllMovieRatings().Where(m => m.Movie == movie)
+                .Where(m => m.Grade == rate).Count();
         }
 
         public List<int> GetMoviesWithHighestNumberOfTopRates()

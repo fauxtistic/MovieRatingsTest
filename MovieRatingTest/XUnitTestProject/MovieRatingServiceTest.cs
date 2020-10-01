@@ -98,7 +98,7 @@ namespace XUnitTestProject
         [InlineData(2, 1)]
         [InlineData(3, 4)]
         public void GetNumberOfReviews(int movie, int exspected)
-        
+
         {
             ratings = new List<MovieRating>()
             {
@@ -111,6 +111,27 @@ namespace XUnitTestProject
             IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
             Assert.Equal(exspected, mrs.GetNumberOfReviews(movie));
         }
+
+        [Theory]
+        [InlineData(1, 0, 0)]
+        [InlineData(2, 1, 1)]
+        [InlineData(3, 4, 0)]
+        public void GetNumberOfRates(int movie, int rate, int exspected)
+        {
+            ratings = new List<MovieRating>()
+            {
+                new MovieRating(1, 2, 1, DateTime.Now),
+                new MovieRating(1, 3, 2, DateTime.Now),
+                new MovieRating(1, 3, 1, DateTime.Now),
+                new MovieRating(1, 3, 2, DateTime.Now),
+                new MovieRating(1, 3, 3, DateTime.Now)
+            };
+            IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
+            Assert.Equal(exspected, mrs.GetNumberOfRates(movie, rate));
+        }
+    
+
+
 
         [Theory]
         [InlineData(1, 2.0)]
