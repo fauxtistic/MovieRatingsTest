@@ -33,7 +33,9 @@ namespace MovieRatingTest.Core.ApplicationServices.Impl
 
         public int GetNumberOfRatesByReviewer(int reviewer, int rate)
         {
-            throw new NotImplementedException();
+            return _repo.GetAllMovieRatings().Where(m => m.Reviewer == reviewer)
+                .Where(m => m.Grade == rate).Count();
+            
         }
 
         public int GetNumberOfReviews(int movie)

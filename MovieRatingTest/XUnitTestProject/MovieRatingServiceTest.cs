@@ -47,6 +47,24 @@ namespace XUnitTestProject
             repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once); //sikrer at repository bruges (bliver omdirigeret til repomock)
         }
 
+        [Theory]
+        [InlineData(1, 0, 1)]
+        [InlineData(2, 1, 2)]
+        [InlineData(3, 2, 3)]
+        public void GetNumberOfRatesByReviewer(int reviewer, int expected, int rate)
+        {
+            // arrange
+            ratings = new List<MovieRating>()
+            {
+                new MovieRating(1, 1, 2, DateTime.Now),
+                new MovieRating(2, 1, 2, DateTime.Now),
+                new MovieRating(3, 2, 3, DateTime.Now),
+                new MovieRating(3, 2, 3, DateTime.Now),
+            };
+            IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
+            Assert.Equal(expected, mrs.GetNumberOfRatesByReviewer(reviewer, rate));
+
+        }
 
         [Theory]
         [InlineData(1, 2.0)]
@@ -75,7 +93,7 @@ namespace XUnitTestProject
 
             Assert.Equal(expected, mrs.GetAverageRateFromReviewer(reviewer));
         }
-
+        
 
         [Fact]
         public void GetMoviesWithHighestNumberOfTopRates()
