@@ -97,22 +97,48 @@ namespace XUnitTestProject
         [InlineData(1, 0)]
         [InlineData(2, 1)]
         [InlineData(3, 4)]
-        public void GetNumberOfReviews(int movie, int expected)
+        public void GetNumberOfReviews(int movie, int exspected)
+        
         {
             ratings = new List<MovieRating>()
             {
                 new MovieRating(1, 2, 1, DateTime.Now),
                 new MovieRating(1, 3, 2, DateTime.Now),
-                new MovieRating(1, 3, 3, DateTime.Now),
-                new MovieRating(1, 3, 3, DateTime.Now),
-                new MovieRating(1, 5, 3, DateTime.Now),
+                new MovieRating(1, 3, 1, DateTime.Now),
+                new MovieRating(1, 3, 2, DateTime.Now),
                 new MovieRating(1, 3, 3, DateTime.Now)
             };
             IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
-
-            Assert.Equal(expected, mrs.GetNumberOfReviews(movie));
+            Assert.Equal(exspected, mrs.GetNumberOfReviews(movie));
         }
 
+        [Theory]
+        [InlineData(1, 2.0)]
+        [InlineData(2, 3.0)]
+        [InlineData(3, 4.0)]
+        public void GetAverageRateOfMovie(int movie, double exspected)
+        {
+            {
+                ratings = new List<MovieRating>()
+                {
+                    new MovieRating(1, 1, 1, DateTime.Now),
+                    new MovieRating(1, 1, 2, DateTime.Now),
+                    new MovieRating(1, 1, 3, DateTime.Now),
+
+                    new MovieRating(2, 2, 2, DateTime.Now),
+                    new MovieRating(2, 2, 3, DateTime.Now),
+                    new MovieRating(2, 2, 4, DateTime.Now),
+
+                    new MovieRating(3, 3, 3, DateTime.Now),
+                    new MovieRating(3, 3, 4, DateTime.Now),
+                    new MovieRating(3, 3, 5, DateTime.Now)
+
+
+                };
+                IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
+                Assert.Equal(exspected, mrs.GetAverageRateOfMovie(movie));
+        }
+        }
 
         [Fact]
         public void GetMoviesWithHighestNumberOfTopRates()

@@ -45,7 +45,13 @@ namespace MovieRatingTest.Core.ApplicationServices.Impl
 
         public double GetAverageRateOfMovie(int movie)
         {
-            throw new NotImplementedException();
+            var movies = _repo.GetAllMovieRatings().Where(m => m.Movie == movie);
+            double total = 0;
+            foreach (var item in movies)
+            {
+                total += item.Grade;
+            }
+            return total / movies.Count();
         }
 
         public int GetNumberOfRates(int movie, int rate)
