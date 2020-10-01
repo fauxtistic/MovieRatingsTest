@@ -40,7 +40,7 @@ namespace MovieRatingTest.Core.ApplicationServices.Impl
 
         public int GetNumberOfReviews(int movie)
         {
-            throw new NotImplementedException();
+            return _repo.GetAllMovieRatings().Where(m => m.Movie == movie).Count();
         }
 
         public double GetAverageRateOfMovie(int movie)

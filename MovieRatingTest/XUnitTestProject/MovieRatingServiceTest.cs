@@ -93,7 +93,26 @@ namespace XUnitTestProject
 
             Assert.Equal(expected, mrs.GetAverageRateFromReviewer(reviewer));
         }
-        
+        [Theory]
+        [InlineData(1, 0)]
+        [InlineData(2, 1)]
+        [InlineData(3, 4)]
+        public void GetNumberOfReviews(int movie, int expected)
+        {
+            ratings = new List<MovieRating>()
+            {
+                new MovieRating(1, 2, 1, DateTime.Now),
+                new MovieRating(1, 3, 2, DateTime.Now),
+                new MovieRating(1, 3, 3, DateTime.Now),
+                new MovieRating(1, 3, 3, DateTime.Now),
+                new MovieRating(1, 5, 3, DateTime.Now),
+                new MovieRating(1, 3, 3, DateTime.Now)
+            };
+            IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
+
+            Assert.Equal(expected, mrs.GetNumberOfReviews(movie));
+        }
+
 
         [Fact]
         public void GetMoviesWithHighestNumberOfTopRates()
