@@ -22,7 +22,13 @@ namespace MovieRatingTest.Core.ApplicationServices.Impl
 
         public double GetAverageRateFromReviewer(int reviewer)
         {
-            throw new NotImplementedException();
+            var reviews = _repo.GetAllMovieRatings().Where(m => m.Reviewer == reviewer);
+            double total = 0;
+            foreach (var item in reviews)
+            {
+                total += item.Grade;
+            }
+            return total / reviews.Count();
         }
 
         public int GetNumberOfRatesByReviewer(int reviewer, int rate)
