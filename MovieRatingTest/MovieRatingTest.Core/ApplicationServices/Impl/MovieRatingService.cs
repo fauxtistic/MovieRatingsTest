@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace MovieRatingTest.Core.ApplicationServices.Impl
 {
@@ -80,7 +81,19 @@ namespace MovieRatingTest.Core.ApplicationServices.Impl
 
         public List<int> GetMostProductiveReviewers()
         {
-            throw new NotImplementedException();
+            var reviewers = _repo.GetAllMovieRatings()
+                .GroupBy(m => m.Reviewer)
+                .Select(group => new
+                {
+                    Reviewer = group.Key,
+                    Reviews = group.Count()
+                });
+
+            int maxReviews = reviewers.Max(group => group.Reviews);
+
+            return reviewers.Where(group => group.Reviews == maxReviews)
+                .Select(group => group.Reviewer)
+                .ToList();
         }
 
         public List<int> GetTopRatedMovies(int amount)

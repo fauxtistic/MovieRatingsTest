@@ -183,5 +183,30 @@ namespace XUnitTestProject
 
             Assert.Equal(expected, result);            
         }
+
+        [Fact]
+        public void GetMostProductiveReviewers()
+        {
+            ratings = new List<MovieRating>()
+            {
+                new MovieRating(1, 1, 1, DateTime.Now),                
+                new MovieRating(1, 2, 1, DateTime.Now), 
+                
+                new MovieRating(2, 1, 1, DateTime.Now),                
+                new MovieRating(2, 2, 1, DateTime.Now),                
+                new MovieRating(2, 3, 1, DateTime.Now),
+
+                new MovieRating(3, 1, 1, DateTime.Now),
+                new MovieRating(3, 2, 1, DateTime.Now),
+                new MovieRating(3, 3, 1, DateTime.Now),
+            };
+
+            IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
+
+            List<int> expected = new List<int>() { 2, 3 };
+            List<int> result = mrs.GetMostProductiveReviewers();
+
+            Assert.Equal(expected, result);
+        }
     }
 }
