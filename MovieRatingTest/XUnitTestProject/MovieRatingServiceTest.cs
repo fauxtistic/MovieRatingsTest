@@ -245,5 +245,39 @@ namespace XUnitTestProject
             Assert.Equal(expectedLowestMovie, results[amount - 1]);
         }
 
+        [Theory]
+        [InlineData(1, 5, 1)]
+        [InlineData(2, 1, 5)]
+        [InlineData(3, 4, 2)]
+        public void GetTopMoviesByReviewer(int reviewer, int highestMovie, int lowestMovie)
+        {
+            ratings = new List<MovieRating>()
+            {
+                new MovieRating(1, 1, 1, DateTime.Now.AddDays(-1)), //lowest
+                new MovieRating(1, 2, 1, DateTime.Now),
+                new MovieRating(1, 3, 3, DateTime.Now),
+                new MovieRating(1, 4, 5, DateTime.Now.AddDays(-1)),
+                new MovieRating(1, 5, 5, DateTime.Now), //highest
+
+                new MovieRating(2, 1, 5, DateTime.Now), //highest
+                new MovieRating(2, 2, 5, DateTime.Now.AddDays(-1)),
+                new MovieRating(2, 3, 3, DateTime.Now),
+                new MovieRating(2, 4, 1, DateTime.Now),
+                new MovieRating(2, 5, 1, DateTime.Now.AddDays(-1)), //lowest
+
+                new MovieRating(3, 1, 5, DateTime.Now.AddDays(-1)),
+                new MovieRating(3, 2, 1, DateTime.Now.AddDays(-1)), //lowest
+                new MovieRating(3, 3, 3, DateTime.Now),
+                new MovieRating(3, 4, 5, DateTime.Now), //highest
+                new MovieRating(3, 5, 1, DateTime.Now)
+            };
+
+            IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
+
+            List<int> results = mrs.GetTopMoviesByReviewer(reviewer);
+            Assert.Equal(highestMovie, results[0]);
+            Assert.Equal(lowestMovie, results[4]);
+        }
+
     }
 }
