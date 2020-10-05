@@ -5,6 +5,7 @@ using MovieRatingTest.Core.BE;
 using MovieRatingTest.Core.DomainServices;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Xunit;
 
@@ -63,7 +64,7 @@ namespace XUnitTestProject
             };
             IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
             Assert.Equal(expected, mrs.GetNumberOfRatesByReviewer(reviewer, rate));
-
+            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once);
         }
 
         [Theory]
@@ -92,7 +93,9 @@ namespace XUnitTestProject
             IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
 
             Assert.Equal(expected, mrs.GetAverageRateFromReviewer(reviewer));
+            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once);
         }
+
         [Theory]
         [InlineData(1, 0)]
         [InlineData(2, 1)]
@@ -110,12 +113,13 @@ namespace XUnitTestProject
             };
             IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
             Assert.Equal(exspected, mrs.GetNumberOfReviews(movie));
+            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once);
         }
 
         [Theory]
-        [InlineData(1, 0, 0)]
+        [InlineData(1, 1, 0)]
         [InlineData(2, 1, 1)]
-        [InlineData(3, 4, 0)]
+        [InlineData(3, 2, 2)]
         public void GetNumberOfRates(int movie, int rate, int exspected)
         {
             ratings = new List<MovieRating>()
@@ -128,6 +132,7 @@ namespace XUnitTestProject
             };
             IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
             Assert.Equal(exspected, mrs.GetNumberOfRates(movie, rate));
+            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once);
         }
 
 
@@ -158,6 +163,7 @@ namespace XUnitTestProject
                 };
                 IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
                 Assert.Equal(exspected, mrs.GetAverageRateOfMovie(movie));
+                repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once);
             }
         }
 
@@ -182,6 +188,7 @@ namespace XUnitTestProject
             List<int> result = mrs.GetMoviesWithHighestNumberOfTopRates();
 
             Assert.Equal(expected, result);
+            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once);
         }
 
         [Fact]
@@ -207,6 +214,7 @@ namespace XUnitTestProject
             List<int> result = mrs.GetMostProductiveReviewers();
 
             Assert.Equal(expected, result);
+            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once);
         }
 
 
@@ -243,6 +251,7 @@ namespace XUnitTestProject
 
             List<int> results = mrs.GetTopRatedMovies(amount);
             Assert.Equal(expectedLowestMovie, results[amount - 1]);
+            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once);
         }
 
         [Theory]
@@ -277,6 +286,7 @@ namespace XUnitTestProject
             List<int> results = mrs.GetTopMoviesByReviewer(reviewer);
             Assert.Equal(highestMovie, results[0]);
             Assert.Equal(lowestMovie, results[4]);
+            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once);
         }
 
         [Theory]
@@ -311,8 +321,53 @@ namespace XUnitTestProject
             List<int> results = mrs.GetReviewersByMovie(movie);
             Assert.Equal(firstListedReviewer, results[0]);
             Assert.Equal(lastListedReviewer, results[4]);
+            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once);
         }
 
+        [Theory]
+        [InlineData(0)]
+        [InlineData(6)]
+        public void GetNumberOfRatesByReviewerWithInvalidRateExpectInvalidDataException(int rate)
+        {
+            // arrange
+            ratings = new List<MovieRating>()
+            {
+                new MovieRating(1, 1, 2, DateTime.Now),
+                new MovieRating(2, 1, 2, DateTime.Now),
+                new MovieRating(3, 2, 3, DateTime.Now),
+                new MovieRating(3, 2, 3, DateTime.Now),
+            };            
+
+            IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
+
+            int reviewer = 3;            
+
+            var ex = Assert.Throws<InvalidDataException>(() => mrs.GetNumberOfRatesByReviewer(reviewer, rate));
+            Assert.Equal("Rate must be in the range 1-5", ex.Message);
+            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Never);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(6)]
+        public void GetNumberOfRatesWithInvalidRateExpectInvalidDataException(int rate)
+        {
+            ratings = new List<MovieRating>()
+            {
+                new MovieRating(1, 2, 1, DateTime.Now),
+                new MovieRating(1, 3, 2, DateTime.Now),
+                new MovieRating(1, 3, 1, DateTime.Now),
+                new MovieRating(1, 3, 2, DateTime.Now),
+                new MovieRating(1, 3, 3, DateTime.Now)
+            };
+
+            IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
+            int movie = 1;
+
+            var ex = Assert.Throws<InvalidDataException>(() => mrs.GetNumberOfRates(movie, rate));
+            Assert.Equal("Rate must be in the range 1-5", ex.Message);
+            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Never);
+        }
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using MovieRatingTest.Core.DomainServices;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -29,11 +30,17 @@ namespace MovieRatingTest.Core.ApplicationServices.Impl
             {
                 total += item.Grade;
             }
-            return total / reviews.Count();
+            
+            return total / reviews.Count();                     
         }
 
         public int GetNumberOfRatesByReviewer(int reviewer, int rate)
         {
+            if (rate < 1 || rate > 5)
+            {
+                throw new InvalidDataException("Rate must be in the range 1-5");
+            }
+
             return _repo.GetAllMovieRatings().Where(m => m.Reviewer == reviewer)
                 .Where(m => m.Grade == rate).Count();
             
@@ -57,6 +64,11 @@ namespace MovieRatingTest.Core.ApplicationServices.Impl
 
         public int GetNumberOfRates(int movie, int rate)
         {
+            if (rate < 1 || rate > 5)
+            {
+                throw new InvalidDataException("Rate must be in the range 1-5");
+            }
+
             return _repo.GetAllMovieRatings().Where(m => m.Movie == movie)
                 .Where(m => m.Grade == rate).Count();
         }
