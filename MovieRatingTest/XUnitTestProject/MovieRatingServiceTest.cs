@@ -129,7 +129,7 @@ namespace XUnitTestProject
             IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
             Assert.Equal(exspected, mrs.GetNumberOfRates(movie, rate));
         }
-    
+
 
 
 
@@ -158,7 +158,7 @@ namespace XUnitTestProject
                 };
                 IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
                 Assert.Equal(exspected, mrs.GetAverageRateOfMovie(movie));
-        }
+            }
         }
 
         [Fact]
@@ -181,7 +181,7 @@ namespace XUnitTestProject
             List<int> expected = new List<int>() { 1, 3 };
             List<int> result = mrs.GetMoviesWithHighestNumberOfTopRates();
 
-            Assert.Equal(expected, result);            
+            Assert.Equal(expected, result);
         }
 
         [Fact]
@@ -189,11 +189,11 @@ namespace XUnitTestProject
         {
             ratings = new List<MovieRating>()
             {
-                new MovieRating(1, 1, 1, DateTime.Now),                
-                new MovieRating(1, 2, 1, DateTime.Now), 
-                
-                new MovieRating(2, 1, 1, DateTime.Now),                
-                new MovieRating(2, 2, 1, DateTime.Now),                
+                new MovieRating(1, 1, 1, DateTime.Now),
+                new MovieRating(1, 2, 1, DateTime.Now),
+
+                new MovieRating(2, 1, 1, DateTime.Now),
+                new MovieRating(2, 2, 1, DateTime.Now),
                 new MovieRating(2, 3, 1, DateTime.Now),
 
                 new MovieRating(3, 1, 1, DateTime.Now),
@@ -208,5 +208,42 @@ namespace XUnitTestProject
 
             Assert.Equal(expected, result);
         }
+
+
+        [Theory]
+        [InlineData(5, 1)]
+        [InlineData(4, 2)]
+        [InlineData(3, 3)]
+        [InlineData(2, 4)]
+        [InlineData(1, 5)]
+        public void GetTopRatedMovies(int amount, int expectedLowestMovie)
+        {
+            ratings = new List<MovieRating>()
+            {
+                new MovieRating(1, 1, 1, DateTime.Now),
+                new MovieRating(1, 2, 2, DateTime.Now),
+                new MovieRating(1, 3, 3, DateTime.Now),
+                new MovieRating(1, 4, 4, DateTime.Now),
+                new MovieRating(1, 5, 5, DateTime.Now),
+
+                new MovieRating(2, 1, 1, DateTime.Now),
+                new MovieRating(2, 2, 2, DateTime.Now),
+                new MovieRating(2, 3, 3, DateTime.Now),
+                new MovieRating(2, 4, 4, DateTime.Now),
+                new MovieRating(2, 5, 5, DateTime.Now),
+
+                new MovieRating(3, 1, 1, DateTime.Now),
+                new MovieRating(3, 2, 2, DateTime.Now),
+                new MovieRating(3, 3, 3, DateTime.Now),
+                new MovieRating(3, 4, 4, DateTime.Now),
+                new MovieRating(3, 5, 5, DateTime.Now),
+            };
+
+            IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
+
+            List<int> results = mrs.GetTopRatedMovies(amount);
+            Assert.Equal(expectedLowestMovie, results[amount - 1]);
+        }
+
     }
 }

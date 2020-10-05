@@ -98,7 +98,17 @@ namespace MovieRatingTest.Core.ApplicationServices.Impl
 
         public List<int> GetTopRatedMovies(int amount)
         {
-            throw new NotImplementedException();
+            return _repo.GetAllMovieRatings()
+                .GroupBy(m => m.Movie)
+                .Select(group => new
+                {
+                    Movie = group.Key,
+                    Rate = group.Average(group => group.Grade)
+                })
+                .OrderByDescending(group => group.Rate)
+                .Take(amount)
+                .Select(group => group.Movie)
+                .ToList();
         }
 
         public List<int> GetTopMoviesByReviewer(int reviewer)
