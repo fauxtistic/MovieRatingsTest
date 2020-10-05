@@ -123,7 +123,12 @@ namespace MovieRatingTest.Core.ApplicationServices.Impl
 
         public List<int> GetReviewersByMovie(int movie)
         {
-            throw new NotImplementedException();
+            return _repo.GetAllMovieRatings()
+               .Where(m => m.Movie == movie)
+               .OrderByDescending(m => m.Grade)
+               .ThenByDescending(m => m.Date)
+               .Select(m => m.Reviewer)
+               .ToList();
         }
 
     }
