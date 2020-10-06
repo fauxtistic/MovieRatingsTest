@@ -354,3 +354,4 @@ MigrationBackup/
 
 # JSON
 .json
+MovieRatingTest/ratings.json
