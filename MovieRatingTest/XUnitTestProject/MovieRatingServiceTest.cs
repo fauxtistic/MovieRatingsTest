@@ -19,7 +19,7 @@ namespace XUnitTestProject
         public MovieRatingServiceTest()
         {
             repoMock = new Mock<IMovieRatingRepository>();
-            repoMock.Setup(x => x.GetAllMovieRatings()).Returns(() => ratings);
+            repoMock.Setup(x => x.Ratings).Returns(() => ratings);
         }
         //1.On input N, what are the number of reviews from reviewer N?
 
@@ -45,7 +45,7 @@ namespace XUnitTestProject
 
             // assert
             Assert.Equal(result, expected);
-            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once); //sikrer at repository bruges (bliver omdirigeret til repomock)
+            repoMock.Verify(r => r.Ratings, Times.Once); //sikrer at repository bruges (bliver omdirigeret til repomock)
         }
 
         [Theory]
@@ -64,7 +64,7 @@ namespace XUnitTestProject
             };
             IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
             Assert.Equal(expected, mrs.GetNumberOfRatesByReviewer(reviewer, rate));
-            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once);
+            repoMock.Verify(r => r.Ratings, Times.Once);
         }
 
         [Theory]
@@ -93,7 +93,7 @@ namespace XUnitTestProject
             IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
 
             Assert.Equal(expected, mrs.GetAverageRateFromReviewer(reviewer));
-            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once);
+            repoMock.Verify(r => r.Ratings, Times.Once);
         }
 
         [Theory]
@@ -113,7 +113,7 @@ namespace XUnitTestProject
             };
             IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
             Assert.Equal(exspected, mrs.GetNumberOfReviews(movie));
-            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once);
+            repoMock.Verify(r => r.Ratings, Times.Once);
         }
 
         [Theory]
@@ -132,7 +132,7 @@ namespace XUnitTestProject
             };
             IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
             Assert.Equal(exspected, mrs.GetNumberOfRates(movie, rate));
-            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once);
+            repoMock.Verify(r => r.Ratings, Times.Once);
         }
 
 
@@ -163,7 +163,7 @@ namespace XUnitTestProject
                 };
                 IMovieRatingService mrs = new MovieRatingService(repoMock.Object);
                 Assert.Equal(exspected, mrs.GetAverageRateOfMovie(movie));
-                repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once);
+                repoMock.Verify(r => r.Ratings, Times.Once);
             }
         }
 
@@ -188,7 +188,7 @@ namespace XUnitTestProject
             List<int> result = mrs.GetMoviesWithHighestNumberOfTopRates();
 
             Assert.Equal(expected, result);
-            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once);
+            repoMock.Verify(r => r.Ratings, Times.Once);
         }
 
         [Fact]
@@ -214,7 +214,7 @@ namespace XUnitTestProject
             List<int> result = mrs.GetMostProductiveReviewers();
 
             Assert.Equal(expected, result);
-            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once);
+            repoMock.Verify(r => r.Ratings, Times.Once);
         }
 
 
@@ -251,7 +251,7 @@ namespace XUnitTestProject
 
             List<int> results = mrs.GetTopRatedMovies(amount);
             Assert.Equal(expectedLowestMovie, results[amount - 1]);
-            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once);
+            repoMock.Verify(r => r.Ratings, Times.Once);
         }
 
         [Theory]
@@ -286,7 +286,7 @@ namespace XUnitTestProject
             List<int> results = mrs.GetTopMoviesByReviewer(reviewer);
             Assert.Equal(highestMovie, results[0]);
             Assert.Equal(lowestMovie, results[4]);
-            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once);
+            repoMock.Verify(r => r.Ratings, Times.Once);
         }
 
         [Theory]
@@ -321,7 +321,7 @@ namespace XUnitTestProject
             List<int> results = mrs.GetReviewersByMovie(movie);
             Assert.Equal(firstListedReviewer, results[0]);
             Assert.Equal(lastListedReviewer, results[4]);
-            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Once);
+            repoMock.Verify(r => r.Ratings, Times.Once);
         }
 
         [Theory]
@@ -344,7 +344,7 @@ namespace XUnitTestProject
 
             var ex = Assert.Throws<InvalidDataException>(() => mrs.GetNumberOfRatesByReviewer(reviewer, rate));
             Assert.Equal("Rate must be in the range 1-5", ex.Message);
-            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Never);
+            repoMock.Verify(r => r.Ratings, Times.Never);
         }
 
         [Theory]
@@ -366,7 +366,7 @@ namespace XUnitTestProject
 
             var ex = Assert.Throws<InvalidDataException>(() => mrs.GetNumberOfRates(movie, rate));
             Assert.Equal("Rate must be in the range 1-5", ex.Message);
-            repoMock.Verify(r => r.GetAllMovieRatings(), Times.Never);
+            repoMock.Verify(r => r.Ratings, Times.Never);
         }
 
     }

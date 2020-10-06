@@ -7,6 +7,7 @@ namespace MovieRatingTest.Core.DomainServices
 {
     public interface IMovieRatingRepository
     {
-        public List<MovieRating> GetAllMovieRatings();        
+        public List<MovieRating> Ratings { get; }
+        public List<MovieRating> ReadAllMovieRatings(string filename);        
     }
 }

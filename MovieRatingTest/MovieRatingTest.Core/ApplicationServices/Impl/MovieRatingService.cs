@@ -19,12 +19,12 @@ namespace MovieRatingTest.Core.ApplicationServices.Impl
 
         public int GetNumberOfReviewsFromReviewer(int reviewer)
         {
-            return _repo.GetAllMovieRatings().Where(m => m.Reviewer == reviewer).Count();
+            return _repo.Ratings.Where(m => m.Reviewer == reviewer).Count();
         }
 
         public double GetAverageRateFromReviewer(int reviewer)
         {
-            var reviews = _repo.GetAllMovieRatings().Where(m => m.Reviewer == reviewer);
+            var reviews = _repo.Ratings.Where(m => m.Reviewer == reviewer);
             double total = 0;
             foreach (var item in reviews)
             {
@@ -41,19 +41,19 @@ namespace MovieRatingTest.Core.ApplicationServices.Impl
                 throw new InvalidDataException("Rate must be in the range 1-5");
             }
 
-            return _repo.GetAllMovieRatings().Where(m => m.Reviewer == reviewer)
+            return _repo.Ratings.Where(m => m.Reviewer == reviewer)
                 .Where(m => m.Grade == rate).Count();
             
         }
 
         public int GetNumberOfReviews(int movie)
         {
-            return _repo.GetAllMovieRatings().Where(m => m.Movie == movie).Count();
+            return _repo.Ratings.Where(m => m.Movie == movie).Count();
         }
 
         public double GetAverageRateOfMovie(int movie)
         {
-            var movies = _repo.GetAllMovieRatings().Where(m => m.Movie == movie);
+            var movies = _repo.Ratings.Where(m => m.Movie == movie);
             double total = 0;
             foreach (var item in movies)
             {
@@ -69,13 +69,13 @@ namespace MovieRatingTest.Core.ApplicationServices.Impl
                 throw new InvalidDataException("Rate must be in the range 1-5");
             }
 
-            return _repo.GetAllMovieRatings().Where(m => m.Movie == movie)
+            return _repo.Ratings.Where(m => m.Movie == movie)
                 .Where(m => m.Grade == rate).Count();
         }
 
         public List<int> GetMoviesWithHighestNumberOfTopRates()
         {
-            var movie5 = _repo.GetAllMovieRatings()
+            var movie5 = _repo.Ratings
                 .Where(m => m.Grade == 5)
                 .GroupBy(m => m.Movie)
                 .Select(group => new
@@ -93,7 +93,7 @@ namespace MovieRatingTest.Core.ApplicationServices.Impl
 
         public List<int> GetMostProductiveReviewers()
         {
-            var reviewers = _repo.GetAllMovieRatings()
+            var reviewers = _repo.Ratings
                 .GroupBy(m => m.Reviewer)
                 .Select(group => new
                 {
@@ -110,7 +110,7 @@ namespace MovieRatingTest.Core.ApplicationServices.Impl
 
         public List<int> GetTopRatedMovies(int amount)
         {
-            return _repo.GetAllMovieRatings()
+            return _repo.Ratings
                 .GroupBy(m => m.Movie)
                 .Select(group => new
                 {
@@ -125,7 +125,7 @@ namespace MovieRatingTest.Core.ApplicationServices.Impl
 
         public List<int> GetTopMoviesByReviewer(int reviewer)
         {
-            return _repo.GetAllMovieRatings()
+            return _repo.Ratings
                 .Where(m => m.Reviewer == reviewer)
                 .OrderByDescending(m => m.Grade)
                 .ThenByDescending(m => m.Date)
@@ -135,7 +135,7 @@ namespace MovieRatingTest.Core.ApplicationServices.Impl
 
         public List<int> GetReviewersByMovie(int movie)
         {
-            return _repo.GetAllMovieRatings()
+            return _repo.Ratings
                .Where(m => m.Movie == movie)
                .OrderByDescending(m => m.Grade)
                .ThenByDescending(m => m.Date)
