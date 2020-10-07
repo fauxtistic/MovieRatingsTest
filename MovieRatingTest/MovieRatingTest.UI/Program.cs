@@ -11,7 +11,7 @@ namespace MovieRatingTest.UI
     {
         static void Main(string[] args)
         {
-            string filepath = @".\ratings.json";            
+            string filepath = "../../../../ratings.json";            
             Stopwatch sw = Stopwatch.StartNew();
             IMovieRatingRepository repo = new JsonFileRepository(filepath);
             MovieRatingService service = new MovieRatingService(repo);
