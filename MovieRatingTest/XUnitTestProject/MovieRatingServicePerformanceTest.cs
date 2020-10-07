@@ -9,26 +9,57 @@ using Xunit;
 
 namespace XUnitTestProject
 {
-    public class MovieRatingServicePerformanceTest
+    public class MovieRatingServicePerformanceTest : IClassFixture<TestFixture>
     {        
-        private IMovieRatingRepository repo;
-        private string filename = "..\\MovieRatingTest.Infrastructure\\ratings.json";
+        private IMovieRatingRepository _repo;
+        private int _reviewerMostReviews;
+        private int _movieMostReviews;
+        const int MAX_SECONDS = 4;
+        
 
-        public MovieRatingServicePerformanceTest()
+        public MovieRatingServicePerformanceTest(TestFixture data)
         {
-            repo = new JsonFileRepository(filename);
+            _repo = data.Repository;
+            _reviewerMostReviews = data.ReviewerMostReviews;
+            _movieMostReviews = data.MovieMostReviews;
+        }
+
+        private double TimeInSeconds(Action ac)
+        {
+            Stopwatch sw = Stopwatch.StartNew();
+            ac.Invoke();
+            sw.Stop();
+            return sw.ElapsedMilliseconds / 1000d;
         }
 
         [Fact]
         public void GetNumberOfReviewsFromReviewer()
         {
-            MovieRatingService mrs = new MovieRatingService(repo);
+            MovieRatingService mrs = new MovieRatingService(_repo);
 
-            Stopwatch sw = Stopwatch.StartNew();
-            int result = mrs.GetNumberOfReviewsFromReviewer(1);
-            sw.Stop();
-            Assert.True(sw.ElapsedMilliseconds <= 4000);
+            double seconds = TimeInSeconds(() =>
+            {
+                int result = mrs.GetNumberOfReviewsFromReviewer(_reviewerMostReviews);
+            });            
+            
+            Assert.True(seconds <= MAX_SECONDS);
         }
+
+        [Fact]
+        public void GetNumberOfRatesByReviewer()
+        {
+            MovieRatingService mrs = new MovieRatingService(_repo);
+            int rate = 5;
+
+            double seconds = TimeInSeconds(() =>
+            {
+                int result = mrs.GetNumberOfRatesByReviewer(_reviewerMostReviews, rate);
+            });
+
+            Assert.True(seconds <= MAX_SECONDS);
+        }
+
+
 
     }
 }
