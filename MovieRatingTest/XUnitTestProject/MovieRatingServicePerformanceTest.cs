@@ -84,6 +84,7 @@ namespace XUnitTestProject
 
             Assert.True(seconds <= MAX_SECONDS);
         }
+
         [Fact]
         public void GetAverageRateOfMovie()
         {
@@ -96,19 +97,21 @@ namespace XUnitTestProject
 
             Assert.True(seconds <= MAX_SECONDS);
         }
-        [Fact]
 
+        [Fact]
         public void GetNumberOfRates()
         {
             MovieRatingService mrs = new MovieRatingService(_repo);
+            int rate = 1;
 
             double seconds = TimeInSeconds(() =>
             {
-                int result = mrs.GetNumberOfRates(_movieMostReviews, 1);
+                int result = mrs.GetNumberOfRates(_movieMostReviews, rate);
             });
 
             Assert.True(seconds <= MAX_SECONDS);
         }
+
         [Fact]
         public void GetMoviesWithHighestNumberOfTopRates()
         {
@@ -121,6 +124,7 @@ namespace XUnitTestProject
 
             Assert.True(seconds <= MAX_SECONDS);
         }
+
         [Fact]
         public void GetMostProductiveReviewers()
         {
@@ -133,6 +137,7 @@ namespace XUnitTestProject
 
             Assert.True(seconds <= MAX_SECONDS);
         }
+
         [Theory]
         [InlineData(10)]
         [InlineData(100)]
@@ -147,6 +152,7 @@ namespace XUnitTestProject
 
             Assert.True(seconds <= MAX_SECONDS);
         }
+
         [Fact]
         public void GetTopMoviesByReviewer()
         {
@@ -159,6 +165,7 @@ namespace XUnitTestProject
 
             Assert.True(seconds <= MAX_SECONDS);
         }
+
         [Fact]
         public void GetReviewersByMovie()
         {
