@@ -72,5 +72,20 @@ namespace XUnitTestProject
             Assert.True(seconds <= MAX_SECONDS);
         }
 
+        [Fact]
+        public void GetNumberOfReviews()
+        {
+            MovieRatingService mrs = new MovieRatingService(_repo);
+
+            double seconds = TimeInSeconds(() =>
+            {
+                double result = mrs.GetNumberOfReviews(_reviewerMostReviews);
+            });
+
+            Assert.True(seconds <= MAX_SECONDS);
+        }
+
+
+
     }
 }

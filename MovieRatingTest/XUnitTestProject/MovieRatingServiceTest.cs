@@ -135,9 +135,6 @@ namespace XUnitTestProject
             repoMock.Verify(r => r.Ratings, Times.Once);
         }
 
-
-
-
         [Theory]
         [InlineData(1, 2.0)]
         [InlineData(2, 3.0)]
